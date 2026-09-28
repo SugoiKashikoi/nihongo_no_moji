@@ -6,15 +6,22 @@
 ## 現状の機能
 
 - マイクボタンタップで音声認識を開始/停止（`expo-speech-recognition`, ja-JP）
-- 認識結果を `wanakana` でひらがな・ローマ字に変換して巨大表示
+- 認識結果を `kuromoji`（形態素解析・IPADIC辞書）で読み仮名に変換し、`wanakana`でひらがな・ローマ字表示
 - キッズモード（ひらがなのみ）/ 学習者モード（ひらがな＋ローマ字）切り替え
 - 履歴表示とワンタップ消去
 
-## 既知の制約
+## 漢字→ひらがな変換の仕組み
 
-音声認識エンジンが漢字混じりの文字列を返した場合、形態素解析辞書を使わない現状の実装では
-漢字を正確な読み仮名に変換できません（漢字はそのまま表示され、注記が出ます）。
-将来的に辞書ベースの読み仮名変換（例: kuromoji 等）を組み込む予定です。
+kuromoji は Node.js（`fs`/`zlib`/`path`）前提のため、そのままでは React Native で動きません。
+そこで `src/lib/kuromojiLoader.ts` で以下を独自実装しています。
+
+- IPADIC辞書ファイル（`assets/kuromoji-dict/*.dat.gz`, 約18MB）をアプリにバンドル
+- `expo-asset` + `expo-file-system` の `File#arrayBuffer()` で辞書を読み込み
+- `pako.ungzip` でNode非依存に展開
+- kuromojiの `DynamicDictionaries` / `Tokenizer` を直接呼び出してトークナイザーを構築
+
+初回起動時に辞書の読み込み（数秒程度）が発生するため、読み込み中はマイクボタンを無効化しています。
+辞書にない語（記号・固有名詞など）は読みが取得できず、その場合は元の文字がそのまま残ります。
 
 ## 開発
 
@@ -32,4 +39,4 @@ npx expo run:android   # Android 実機/エミュレータ
 
 - Expo (React Native) / TypeScript
 - expo-speech-recognition（iOS: SFSpeechRecognizer / Android: SpeechRecognizer）
-- wanakana（かな⇔ローマ字変換）
+- kuromoji（形態素解析・読み仮名変換） / wanakana（かな⇔ローマ字変換） / pako（辞書展開）

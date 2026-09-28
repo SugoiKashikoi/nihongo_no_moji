@@ -26,6 +26,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "assetBundlePatterns": ["assets/kuromoji-dict/*"],
     "plugins": [
       [
         "expo-speech-recognition",

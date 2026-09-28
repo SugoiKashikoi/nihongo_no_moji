@@ -15,8 +15,16 @@ type Mode = "kids" | "learner";
 
 export default function App() {
   const [mode, setMode] = useState<Mode>("kids");
-  const { isListening, current, history, errorMessage, start, stop, clear } =
-    useVoiceToKana();
+  const {
+    isListening,
+    current,
+    history,
+    errorMessage,
+    isDictReady,
+    start,
+    stop,
+    clear,
+  } = useVoiceToKana();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -51,6 +59,8 @@ export default function App() {
               </Text>
             )}
           </>
+        ) : !isDictReady ? (
+          <Text style={styles.placeholder}>辞書を読み込んでいます...</Text>
         ) : (
           <Text style={styles.placeholder}>
             マイクをタップして{"\n"}話しかけてね
@@ -61,8 +71,13 @@ export default function App() {
 
       <View style={styles.controls}>
         <Pressable
+          disabled={!isDictReady}
           onPress={isListening ? stop : start}
-          style={[styles.micButton, isListening && styles.micButtonActive]}
+          style={[
+            styles.micButton,
+            isListening && styles.micButtonActive,
+            !isDictReady && styles.micButtonDisabled,
+          ]}
         >
           <Text style={styles.micButtonText}>
             {isListening ? "きく..." : "マイク"}
@@ -179,6 +194,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   micButtonActive: { backgroundColor: "#FF8A3D" },
+  micButtonDisabled: { backgroundColor: "#EEE5D3" },
   micButtonText: { fontSize: 20, fontWeight: "700", color: "#3A2E1F" },
   clearButton: {
     paddingVertical: 12,
