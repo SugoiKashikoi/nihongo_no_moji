@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "こえの文字",
+    "slug": "nihongo_no_moji",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "話した言葉をひらがな・ローマ字に変換するためにマイクを使用します。",
+        "NSSpeechRecognitionUsageDescription": "話した言葉をひらがな・ローマ字に変換するために音声認識を使用します。"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": ["android.permission.RECORD_AUDIO"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "話した言葉をひらがな・ローマ字に変換するためにマイクを使用します。",
+          "speechRecognitionPermission": "話した言葉をひらがな・ローマ字に変換するために音声認識を使用します。",
+          "androidSpeechServicePackages": ["com.google.android.googlequicksearchbox"]
+        }
+      ]
+    ]
+  }
+}
