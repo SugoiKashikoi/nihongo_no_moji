@@ -65,7 +65,13 @@ export function useVoiceToKana() {
     ExpoSpeechRecognitionModule.start({
       lang: "ja-JP",
       interimResults: true,
-      continuous: false,
+      // trueにすることで、無音になっても自動停止せず、
+      // マイクボタンをもう一度タップして止めるまで受付を続ける。
+      continuous: true,
+      androidIntentOptions: {
+        // Android側の無音判定までの時間を延長（continuous:trueと合わせて長めの発話にも対応）
+        EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
+      },
     });
   }, []);
 
