@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import { Asset } from "expo-asset";
 import { File } from "expo-file-system";
 import * as pako from "pako";
@@ -57,7 +58,12 @@ let tokenizerPromise: Promise<KuromojiTokenizer> | null = null;
 
 export function getKuromojiTokenizer(): Promise<KuromojiTokenizer> {
   if (!tokenizerPromise) {
-    tokenizerPromise = buildTokenizer();
+    // expo-file-systemのFile#arrayBuffer()はWeb未対応で必ず失敗するため、
+    // Webでは18MBの辞書を無駄にダウンロードせず即座にフォールバックさせる。
+    tokenizerPromise =
+      Platform.OS === "web"
+        ? Promise.reject(new Error("kuromoji dictionary is not supported on web"))
+        : buildTokenizer();
   }
   return tokenizerPromise;
 }
