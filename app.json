@@ -27,6 +27,9 @@
       "favicon": "./assets/favicon.png"
     },
     "assetBundlePatterns": ["assets/kuromoji-dict/*"],
+    "experiments": {
+      "baseUrl": "/nihongo_no_moji"
+    },
     "plugins": [
       [
         "expo-speech-recognition",
